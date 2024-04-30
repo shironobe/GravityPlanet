@@ -48,14 +48,25 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            
 
-            RespawnPlayer();
+
+            ReStartPlayer();
 
 
         }
     }
+    public void ReStartPlayer()
+    {
+         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+         LastCheckPointPos = new Vector2(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"));
 
+
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
+        Player.position = LastCheckPointPos;
+        Physics2D.gravity = new Vector2(0, -9.81f);
+
+        PlayerController.Instance.ResetPlayer();
+    }
 
     public void RespawnPlayer()
     {

@@ -7,13 +7,16 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     public static PlayerController Instance;
 
-    public enum playerStates { Down_Walking, Right_Walking, up_Walking, Left_Walking }
+    public enum playerStates { Down_Walking, Right_Walking, up_Walking, Left_Walking,  AntiGravity }
 
     public playerStates CurrentState;
 
     public float movingSpeed;
     public float jumpForce;
     private float moveInput;
+
+    [SerializeField] float flyingForce;
+    [SerializeField] float forwardForce;
 
     private float Move;
 
@@ -267,6 +270,41 @@ public class PlayerController : MonoBehaviour
 
                 break;
 
+
+            case playerStates.AntiGravity:
+
+                rigidbody2d.velocity = new Vector2(forwardForce, rigidbody2d.velocity.y);
+
+                if (Input.GetKey(KeyCode.Space))
+                {
+
+                    //  rigidbody2d.AddForce(transform.up * flyingForce * Time.deltaTime);
+                    animator.SetBool("isGrounded", true);
+                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, flyingForce);
+
+                }
+                else
+                {
+                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, -flyingForce);
+                    animator.SetBool("isGrounded", false);
+                }
+
+                //if (Input.GetKey(KeyCode.LeftArrow))
+                //{
+                //    transform.Rotate(Vector3.forward * 10 * Time.deltaTime);
+
+                //}
+
+
+               
+
+
+
+
+
+
+                break;
+
         }
 
         if (Input.GetButtonUp("Jump") && rigidbody2d.velocity.y > 0f)
@@ -283,8 +321,10 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isMoving", false);
         }
 
-      
+        if (CurrentState != playerStates.AntiGravity)
+        {
             animator.SetBool("isGrounded", isGrounded);
+        }
         
 
 
@@ -295,6 +335,9 @@ public class PlayerController : MonoBehaviour
 
 
     }
+
+    
+
     public void ResetPlayer()
     {
         DownWalking();
@@ -543,11 +586,36 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (other.gameObject.CompareTag("AntiGravity"))
+        {
+            if (CurrentState == playerStates.Down_Walking)
+            {
+                CurrentState = playerStates.AntiGravity;
+            }
+            
+        }
+
+        if (other.gameObject.CompareTag("AntiGravityEnd"))
+        {
+            if (CurrentState == playerStates.AntiGravity)
+            {
+                DownWalking();
+            }
+
+        }
+
     }
 
     private void OnTriggerStay2D(Collider2D other)
     {
-        
+        if (other.gameObject.CompareTag("AntiGravityEnd"))
+        {
+            if (CurrentState == playerStates.AntiGravity)
+            {
+                DownWalking();
+            }
+
+        }
     }
 
     private void LeftWalking()
