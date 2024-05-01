@@ -22,9 +22,9 @@ public class Obstacle : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
 
-            Debug.Log("You Died");
 
-            GameManager.Instance.RespawnPlayer();
+
+            GameManager.Instance.Activate_Restart_Panel();
         }  
         
 
@@ -36,9 +36,9 @@ public class Obstacle : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
 
-            Debug.Log("You Died");
 
-            GameManager.Instance.RespawnPlayer();
+
+            GameManager.Instance.Activate_Restart_Panel();
         }
     }
 }

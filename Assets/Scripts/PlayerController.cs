@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     public static PlayerController Instance;
 
-    public enum playerStates { Down_Walking, Right_Walking, up_Walking, Left_Walking,  AntiGravity }
+    public enum playerStates { Down_Walking, Right_Walking, up_Walking, Left_Walking, AntiGravity }
 
     public playerStates CurrentState;
 
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigidbody2d;
     private Animator animator;
     // private GameManager gameManager;
-
+    public bool isDead;
     private void Awake()
     {
         if (Instance != null)
@@ -65,278 +65,279 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
 
-
-        switch (CurrentState)
+        if (!isDead)
         {
-            case playerStates.Down_Walking:
-                Physics2D.gravity = new Vector2(0, -9.81f);
-                if (Input.GetKey(KeyCode.D))                         //Movement code
-                {
-                    // theRb.AddForce(Vector2.right);
-                    Move = 1;
-
-                    transform.localScale = new Vector2(1, 1);
-
-
-
-                }
-                else if (Input.GetKey(KeyCode.A))
-                {
-                    // theRb.AddForce(Vector2.left);
-                    Move = -1;
-                    transform.localScale = new Vector2(-1, 1);
-                }
-                else
-                {
-
-                    Move = 0;
-                    // stopMoving();
-                    rigidbody2d.velocity = new Vector2(0, rigidbody2d.velocity.y);
-                    // Move = Mathf.Lerp(Move, 0, 2f);
-
-
-                }
-                rigidbody2d.velocity = new Vector2(movingSpeed * Move * Time.fixedDeltaTime, rigidbody2d.velocity.y);
-
-
-
-                if (isGrounded && !Input.GetButton("Jump"))
-                {
-                    canDoubleJump = false;
-
-
-                }
-                if (Input.GetButtonDown("Jump"))
-                {
-                    if (isGrounded || canDoubleJump)
+            switch (CurrentState)
+            {
+                case playerStates.Down_Walking:
+                    Physics2D.gravity = new Vector2(0, -9.81f);
+                    if (Input.GetKey(KeyCode.D))                         //Movement code
                     {
-                        rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, jumpForce);
+                        // theRb.AddForce(Vector2.right);
+                        Move = 1;
 
-                        canDoubleJump = !canDoubleJump;
+                        transform.localScale = new Vector2(1, 1);
+
+
+
+                    }
+                    else if (Input.GetKey(KeyCode.A))
+                    {
+                        // theRb.AddForce(Vector2.left);
+                        Move = -1;
+                        transform.localScale = new Vector2(-1, 1);
+                    }
+                    else
+                    {
+
+                        Move = 0;
+                        // stopMoving();
+                        rigidbody2d.velocity = new Vector2(0, rigidbody2d.velocity.y);
+                        // Move = Mathf.Lerp(Move, 0, 2f);
+
+
+                    }
+                    rigidbody2d.velocity = new Vector2(movingSpeed * Move * Time.fixedDeltaTime, rigidbody2d.velocity.y);
+
+
+
+                    if (isGrounded && !Input.GetButton("Jump"))
+                    {
+                        canDoubleJump = false;
+
+
+                    }
+                    if (Input.GetButtonDown("Jump"))
+                    {
+                        if (isGrounded || canDoubleJump)
+                        {
+                            rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, jumpForce);
+
+                            canDoubleJump = !canDoubleJump;
+
+                        }
 
                     }
 
-                }
+                    break;
 
-                break;
-
-            case playerStates.Right_Walking:
-                Physics2D.gravity = new Vector2(9.81f, 0);
-                if (Input.GetKey(KeyCode.D))                         //Movement code
-                {
-                    // theRb.AddForce(Vector2.right);
-                    Move = 1;
-                    transform.localScale = new Vector2(1, 1);
-                }
-                else if (Input.GetKey(KeyCode.A))
-                {
-                    // theRb.AddForce(Vector2.left);
-                    Move = -1;
-                    transform.localScale = new Vector2(-1, 1);
-                }
-                else
-                {
-
-                    Move = 0;
-                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, 0);
-                    // Move = Mathf.Lerp(Move, 0, 2f);
-
-
-                }
-                // rigidbody2d.velocity = new Vector2(movingSpeed * Move * Time.fixedDeltaTime, rigidbody2d.velocity.y);
-
-                rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, movingSpeed * Move * Time.fixedDeltaTime);
-
-
-
-                if (isGrounded && !Input.GetButton("Jump"))
-                {
-                    canDoubleJump = false;
-
-
-                }
-                if (Input.GetButtonDown("Jump"))
-                {
-                    if (isGrounded || canDoubleJump)
+                case playerStates.Right_Walking:
+                    Physics2D.gravity = new Vector2(9.81f, 0);
+                    if (Input.GetKey(KeyCode.D))                         //Movement code
                     {
-                        rigidbody2d.velocity = new Vector2(-jumpForce, rigidbody2d.velocity.y);
+                        // theRb.AddForce(Vector2.right);
+                        Move = 1;
+                        transform.localScale = new Vector2(1, 1);
+                    }
+                    else if (Input.GetKey(KeyCode.A))
+                    {
+                        // theRb.AddForce(Vector2.left);
+                        Move = -1;
+                        transform.localScale = new Vector2(-1, 1);
+                    }
+                    else
+                    {
 
-                        canDoubleJump = !canDoubleJump;
+                        Move = 0;
+                        rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, 0);
+                        // Move = Mathf.Lerp(Move, 0, 2f);
+
+
+                    }
+                    // rigidbody2d.velocity = new Vector2(movingSpeed * Move * Time.fixedDeltaTime, rigidbody2d.velocity.y);
+
+                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, movingSpeed * Move * Time.fixedDeltaTime);
+
+
+
+                    if (isGrounded && !Input.GetButton("Jump"))
+                    {
+                        canDoubleJump = false;
+
+
+                    }
+                    if (Input.GetButtonDown("Jump"))
+                    {
+                        if (isGrounded || canDoubleJump)
+                        {
+                            rigidbody2d.velocity = new Vector2(-jumpForce, rigidbody2d.velocity.y);
+
+                            canDoubleJump = !canDoubleJump;
+
+                        }
 
                     }
 
-                }
+                    break;
 
-                break;
+                case playerStates.up_Walking:
 
-            case playerStates.up_Walking:
+                    Physics2D.gravity = new Vector2(0, 9.81f);
 
-                Physics2D.gravity = new Vector2(0, 9.81f);
-
-                if (Input.GetKey(KeyCode.D))                         //Movement code
-                {
-                    // theRb.AddForce(Vector2.right);
-                    Move = -1;
-                    transform.localScale = new Vector2(1, 1);
-                }
-                else if (Input.GetKey(KeyCode.A))
-                {
-                    // theRb.AddForce(Vector2.left);
-                    Move = 1;
-                    transform.localScale = new Vector2(-1, 1);
-                }
-                else
-                {
-
-                    Move = 0;
-                    rigidbody2d.velocity = new Vector2(0, rigidbody2d.velocity.y);
-                    // Move = Mathf.Lerp(Move, 0, 2f);
-
-
-                }
-                // rigidbody2d.velocity = new Vector2(movingSpeed * Move * Time.fixedDeltaTime, rigidbody2d.velocity.y);
-
-                rigidbody2d.velocity = new Vector2(movingSpeed * Move * Time.fixedDeltaTime, rigidbody2d.velocity.y);
-
-
-
-                if (isGrounded && !Input.GetButton("Jump"))
-                {
-                    canDoubleJump = false;
-
-
-                }
-                if (Input.GetButtonDown("Jump"))
-                {
-                    if (isGrounded || canDoubleJump)
+                    if (Input.GetKey(KeyCode.D))                         //Movement code
                     {
-                        rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, -jumpForce);
+                        // theRb.AddForce(Vector2.right);
+                        Move = -1;
+                        transform.localScale = new Vector2(1, 1);
+                    }
+                    else if (Input.GetKey(KeyCode.A))
+                    {
+                        // theRb.AddForce(Vector2.left);
+                        Move = 1;
+                        transform.localScale = new Vector2(-1, 1);
+                    }
+                    else
+                    {
 
-                        canDoubleJump = !canDoubleJump;
+                        Move = 0;
+                        rigidbody2d.velocity = new Vector2(0, rigidbody2d.velocity.y);
+                        // Move = Mathf.Lerp(Move, 0, 2f);
+
+
+                    }
+                    // rigidbody2d.velocity = new Vector2(movingSpeed * Move * Time.fixedDeltaTime, rigidbody2d.velocity.y);
+
+                    rigidbody2d.velocity = new Vector2(movingSpeed * Move * Time.fixedDeltaTime, rigidbody2d.velocity.y);
+
+
+
+                    if (isGrounded && !Input.GetButton("Jump"))
+                    {
+                        canDoubleJump = false;
+
+
+                    }
+                    if (Input.GetButtonDown("Jump"))
+                    {
+                        if (isGrounded || canDoubleJump)
+                        {
+                            rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, -jumpForce);
+
+                            canDoubleJump = !canDoubleJump;
+
+                        }
 
                     }
 
-                }
 
+                    break;
+                case playerStates.Left_Walking:
 
-                break;
-            case playerStates.Left_Walking:
-
-                Physics2D.gravity = new Vector2(-9.81f, 0);
-                if (Input.GetKey(KeyCode.D))                         //Movement code
-                {
-                    // theRb.AddForce(Vector2.right);
-                    Move = -1;
-                    transform.localScale = new Vector2(1, 1);
-                }
-                else if (Input.GetKey(KeyCode.A))
-                {
-                    // theRb.AddForce(Vector2.left);
-                    Move = 1;
-                    transform.localScale = new Vector2(-1, 1);
-                }
-                else
-                {
-
-                    Move = 0;
-                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, 0);
-                    // Move = Mathf.Lerp(Move, 0, 2f);
-
-
-                }
-                // rigidbody2d.velocity = new Vector2(movingSpeed * Move * Time.fixedDeltaTime, rigidbody2d.velocity.y);
-
-                rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, movingSpeed * Move * Time.fixedDeltaTime);
-
-
-
-                if (isGrounded && !Input.GetButton("Jump"))
-                {
-                    canDoubleJump = false;
-
-
-                }
-                if (Input.GetButtonDown("Jump"))
-                {
-                    if (isGrounded || canDoubleJump)
+                    Physics2D.gravity = new Vector2(-9.81f, 0);
+                    if (Input.GetKey(KeyCode.D))                         //Movement code
                     {
-                        rigidbody2d.velocity = new Vector2(jumpForce, rigidbody2d.velocity.y);
+                        // theRb.AddForce(Vector2.right);
+                        Move = -1;
+                        transform.localScale = new Vector2(1, 1);
+                    }
+                    else if (Input.GetKey(KeyCode.A))
+                    {
+                        // theRb.AddForce(Vector2.left);
+                        Move = 1;
+                        transform.localScale = new Vector2(-1, 1);
+                    }
+                    else
+                    {
 
-                        canDoubleJump = !canDoubleJump;
+                        Move = 0;
+                        rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, 0);
+                        // Move = Mathf.Lerp(Move, 0, 2f);
+
+
+                    }
+                    // rigidbody2d.velocity = new Vector2(movingSpeed * Move * Time.fixedDeltaTime, rigidbody2d.velocity.y);
+
+                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, movingSpeed * Move * Time.fixedDeltaTime);
+
+
+
+                    if (isGrounded && !Input.GetButton("Jump"))
+                    {
+                        canDoubleJump = false;
+
+
+                    }
+                    if (Input.GetButtonDown("Jump"))
+                    {
+                        if (isGrounded || canDoubleJump)
+                        {
+                            rigidbody2d.velocity = new Vector2(jumpForce, rigidbody2d.velocity.y);
+
+                            canDoubleJump = !canDoubleJump;
+
+                        }
 
                     }
 
-                }
-
-                break;
+                    break;
 
 
-            case playerStates.AntiGravity:
+                case playerStates.AntiGravity:
 
-                rigidbody2d.velocity = new Vector2(forwardForce, rigidbody2d.velocity.y);
+                    rigidbody2d.velocity = new Vector2(forwardForce, rigidbody2d.velocity.y);
 
-                if (Input.GetKey(KeyCode.Space))
-                {
+                    if (Input.GetKey(KeyCode.Space))
+                    {
 
-                    //  rigidbody2d.AddForce(transform.up * flyingForce * Time.deltaTime);
-                    animator.SetBool("isGrounded", true);
-                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, flyingForce);
+                        //  rigidbody2d.AddForce(transform.up * flyingForce * Time.deltaTime);
+                        animator.SetBool("isGrounded", true);
+                        rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, flyingForce);
 
-                }
-                else
-                {
-                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, -flyingForce);
-                    animator.SetBool("isGrounded", false);
-                }
+                    }
+                    else
+                    {
+                        rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, -flyingForce);
+                        animator.SetBool("isGrounded", false);
+                    }
 
-                //if (Input.GetKey(KeyCode.LeftArrow))
-                //{
-                //    transform.Rotate(Vector3.forward * 10 * Time.deltaTime);
+                    //if (Input.GetKey(KeyCode.LeftArrow))
+                    //{
+                    //    transform.Rotate(Vector3.forward * 10 * Time.deltaTime);
 
-                //}
-
-
-               
+                    //}
 
 
 
 
 
 
-                break;
+
+
+
+                    break;
+
+            }
+
+            if (Input.GetButtonUp("Jump") && rigidbody2d.velocity.y > 0f)
+            {
+                // rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, rigidbody2d.velocity.y * 0.5f);
+            }
+
+            if (Move == 1 || Move == -1)
+            {
+                animator.SetBool("isMoving", true);
+            }
+            else
+            {
+                animator.SetBool("isMoving", false);
+            }
+
+            if (CurrentState != playerStates.AntiGravity)
+            {
+                animator.SetBool("isGrounded", isGrounded);
+            }
+
+
+
 
         }
-
-        if (Input.GetButtonUp("Jump") && rigidbody2d.velocity.y > 0f)
-        {
-            // rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, rigidbody2d.velocity.y * 0.5f);
-        }
-
-        if(Move == 1 || Move == -1)
-        {
-            animator.SetBool("isMoving", true);
-        }
-        else
-        {
-            animator.SetBool("isMoving", false);
-        }
-
-        if (CurrentState != playerStates.AntiGravity)
-        {
-            animator.SetBool("isGrounded", isGrounded);
-        }
-        
-
-
-
-
 
 
 
 
     }
 
-    
+
 
     public void ResetPlayer()
     {
@@ -436,7 +437,7 @@ public class PlayerController : MonoBehaviour
                 if (CurrentState == playerStates.up_Walking)
                 {
                     RightWalking();
-                  
+
                 }
 
             }
@@ -454,7 +455,7 @@ public class PlayerController : MonoBehaviour
                 if (CurrentState == playerStates.Left_Walking)
                 {
                     UpWalking();
-                   
+
                 }
 
             }
@@ -465,14 +466,14 @@ public class PlayerController : MonoBehaviour
             if (CurrentState == playerStates.Left_Walking)
             {
                 DownWalking();
-               
+
             }
             else
             {
                 if (CurrentState == playerStates.Down_Walking)
                 {
                     LeftWalking();
-                 
+
                 }
 
             }
@@ -485,8 +486,8 @@ public class PlayerController : MonoBehaviour
                 DownWalking();
                 if (other.gameObject.GetComponent<WallWalker>().Pos1 != null)
                 {
-                     // rigidbody2d.position = other.GetComponent<WallWalker>().Pos1.position;
-                  //  rigidbody2d.MovePosition(other.GetComponent<WallWalker>().Pos1.position);
+                    // rigidbody2d.position = other.GetComponent<WallWalker>().Pos1.position;
+                    //  rigidbody2d.MovePosition(other.GetComponent<WallWalker>().Pos1.position);
                     transform.position = other.GetComponent<WallWalker>().Pos1.position;
 
                 }
@@ -499,7 +500,7 @@ public class PlayerController : MonoBehaviour
                     if (other.gameObject.GetComponent<WallWalker>().Pos1 != null)
                     {
                         transform.position = other.GetComponent<WallWalker>().Pos2.position;
-                        
+
                     }
                 }
 
@@ -513,7 +514,7 @@ public class PlayerController : MonoBehaviour
                 if (other.gameObject.GetComponent<WallWalker>().Pos1 != null)
                 {
                     transform.position = other.GetComponent<WallWalker>().Pos1.position;
-                   // transform.position = other.GetComponent<WallWalker>().Pos1.position;
+                    // transform.position = other.GetComponent<WallWalker>().Pos1.position;
 
                 }
             }
@@ -525,7 +526,7 @@ public class PlayerController : MonoBehaviour
                     if (other.gameObject.GetComponent<WallWalker>().Pos1 != null)
                     {
                         transform.position = other.GetComponent<WallWalker>().Pos2.position;
-                       // transform.position = other.GetComponent<WallWalker>().Pos2.position;
+                        // transform.position = other.GetComponent<WallWalker>().Pos2.position;
                     }
                 }
 
@@ -540,7 +541,7 @@ public class PlayerController : MonoBehaviour
                 if (other.gameObject.GetComponent<WallWalker>().Pos1 != null)
                 {
                     transform.position = other.GetComponent<WallWalker>().Pos1.position;
-                    
+
 
                 }
             }
@@ -552,7 +553,7 @@ public class PlayerController : MonoBehaviour
                     if (other.gameObject.GetComponent<WallWalker>().Pos1 != null)
                     {
                         transform.position = other.GetComponent<WallWalker>().Pos2.position;
-                        
+
                     }
                 }
 
@@ -592,7 +593,7 @@ public class PlayerController : MonoBehaviour
             {
                 CurrentState = playerStates.AntiGravity;
             }
-            
+
         }
 
         if (other.gameObject.CompareTag("AntiGravityEnd"))
@@ -651,7 +652,7 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, 180);
     }
 
-    
+
 
 
 }

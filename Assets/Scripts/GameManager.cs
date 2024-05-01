@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -11,9 +12,10 @@ public class GameManager : MonoBehaviour
 
     public Transform Player;
 
+    public GameObject RestartPanel;
 
-
-    
+  [SerializeField]  CinemachineVirtualCamera vcam;
+    CinemachineBasicMultiChannelPerlin noise;
     private void Awake()
     {
         if (Instance != null)
@@ -30,6 +32,8 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+         // vcam = GameObject.Find("CM vcam1").GetComponent<CinemachineVirtualCamera> ();
+        noise = vcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin> ();
       
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         LastCheckPointPos = Player.position;
@@ -54,11 +58,13 @@ public class GameManager : MonoBehaviour
 
 
         }
+
+    
     }
     public void ReStartPlayer()
     {
-         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-         LastCheckPointPos = new Vector2(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"));
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        LastCheckPointPos = new Vector2(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"));
 
 
         Player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -66,6 +72,10 @@ public class GameManager : MonoBehaviour
         Physics2D.gravity = new Vector2(0, -9.81f);
 
         PlayerController.Instance.ResetPlayer();
+
+        PlayerController.Instance.isDead = false;
+
+        RestartPanel.SetActive(false);
     }
 
     public void RespawnPlayer()
@@ -79,16 +89,49 @@ public class GameManager : MonoBehaviour
         Physics2D.gravity = new Vector2(0, -9.81f);
        
         PlayerController.Instance.ResetPlayer();
+
+        PlayerController.Instance.isDead = false;
+
+        RestartPanel.SetActive(false);
     }
     
 
-
+    public void Activate_Restart_Panel()
+    {
+        PlayerController.Instance.isDead = true;
+        RestartPanel.SetActive(true);
+    }
     public void setCheckPoint(Vector2 pos)
     {
         LastCheckPointPos = pos;
         PlayerPrefs.SetFloat("PosX", LastCheckPointPos.x);
 
         PlayerPrefs.SetFloat("PosY", LastCheckPointPos.y);
+
+    }
+
+
+    public void CameraShake() 
+    {
+        StartCoroutine(_ProcessShake());
+    
+    }
+    private IEnumerator _ProcessShake(float shakeIntensity = 5f, float shakeTiming = 2f)
+    {
+        Noise(1, shakeIntensity);
+        yield return new WaitForSeconds(shakeTiming);
+        Noise(0, 0);
+    }
+
+    public void Noise(float amplitudeGain, float frequencyGain)
+    {
+        noise.m_AmplitudeGain = amplitudeGain;
+       // noise.middleRig.Noise.m_AmplitudeGain = amplitudeGain;
+       // cmFreeCam.bottomRig.Noise.m_AmplitudeGain = amplitudeGain;
+
+        noise.m_FrequencyGain = frequencyGain;
+      //  cmFreeCam.middleRig.Noise.m_FrequencyGain = frequencyGain;
+      //  cmFreeCam.bottomRig.Noise.m_FrequencyGain = frequencyGain;
 
     }
 }
