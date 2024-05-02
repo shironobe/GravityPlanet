@@ -20,6 +20,11 @@ public class GameManager : MonoBehaviour
    [SerializeField] GameObject Levels;
 
     [SerializeField] Animator fadeAnim;
+
+    [SerializeField] GameObject CompletedGamePanel;
+
+   
+    
     private void Awake()
     {
         if (Instance != null)
@@ -65,7 +70,10 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene(1, LoadSceneMode.Additive);
         }
-
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            LodMainMenu();
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
 
@@ -135,6 +143,7 @@ public class GameManager : MonoBehaviour
     public void setCheckPoint(Vector2 pos)
     {
         LastCheckPointPos = pos;
+        PlayerPrefs.SetInt("HasCheckpoint", 1);
         PlayerPrefs.SetFloat("PosX", LastCheckPointPos.x);
 
         PlayerPrefs.SetFloat("PosY", LastCheckPointPos.y);
@@ -165,4 +174,29 @@ public class GameManager : MonoBehaviour
       //  cmFreeCam.bottomRig.Noise.m_FrequencyGain = frequencyGain;
 
     }
+
+    public void CompletedGame()
+    {
+        CompletedGamePanel.SetActive(true);
+
+        AudioManager.Instance.PlaySfx(9);
+        PlayerController.Instance.isDead = true;
+    }
+
+    public void LodMainMenu()
+    {
+       StartCoroutine(LoadScene(0));
+    }
+
+
+    IEnumerator LoadScene(int SceneNo)
+    {
+        AudioManager.Instance.PlaySfx(8);
+        fadeAnim.SetTrigger("end");
+        // AudioManager.instance.PlaySfx(5);
+        yield return new WaitForSeconds(0.2f);
+        AudioManager.Instance.PlayMusic(0);
+        SceneManager.LoadSceneAsync(SceneNo);
+    }
+
 }

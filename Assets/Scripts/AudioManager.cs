@@ -8,7 +8,8 @@ public class AudioManager : MonoBehaviour
 
    public bool ShouldRespawn;
 
-    
+
+    public AudioSource[] MusicList;
 
     public AudioSource[] Sfx;
 
@@ -39,7 +40,7 @@ public class AudioManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+      
     }
 
     public void PlaySfx(int Sfxno)
@@ -62,24 +63,36 @@ public class AudioManager : MonoBehaviour
     {
         Sfx[no].Stop();
     }
-    public void PlayMusic(int Sfxno)
+    public void PlayMusic(int MusicNo)
     {
-        Sfx[Sfxno].Play();
+        for (int i = 0; i < MusicList.Length; i++)
+        {
+            MusicList[i].Stop();
+        }
+
+        MusicList[MusicNo].Play();
     }
 
     public void StopMusic()
     {
         if (!muted)
         {
-            Sfx[0].volume = 0;
+            for (int i = 0; i < MusicList.Length; i++)
+            {
+                MusicList[i].volume = 0;
+            }
             muted = true;
-          PlaySfx(0);
+         
         }
         else
         {
-            Sfx[0].volume = 0.7f;
+            for (int i = 0; i < MusicList.Length; i++)
+            {
+                MusicList[i].volume = 0.7f;
+            }
+            
             muted = false;
-           PlaySfx(0);
+          
 
         }
         updateMusicIcon();

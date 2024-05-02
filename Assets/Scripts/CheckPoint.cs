@@ -24,6 +24,7 @@ public class CheckPoint : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            AudioManager.Instance.PlaySfx(7);
             sr.sprite = checkPointOn;
             setCheckPointPos();
         }

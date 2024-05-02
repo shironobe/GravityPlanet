@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
         //  transform.position = new Vector2(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"));
         // gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        if (AudioManager.Instance.ShouldRespawn)
+        if (PlayerPrefs.GetInt("HasCheckpoint") == 1)
         {
             Respawn();
         }
