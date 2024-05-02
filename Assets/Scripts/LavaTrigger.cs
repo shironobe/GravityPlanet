@@ -23,6 +23,7 @@ public class LavaTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            AudioManager.Instance.PlaySfx(6);
             LavaObj.SetActive(true);
             GameManager.Instance.CameraShake();
         }

@@ -32,6 +32,7 @@ public class Lava : MonoBehaviour
         if (!StopMovement)
         {
             // moving the platform to the point position with the index "i"
+           
             transform.position = Vector2.MoveTowards(transform.position, points[i].position, speed * Time.deltaTime);
         }
 
@@ -39,7 +40,7 @@ public class Lava : MonoBehaviour
         if (Vector2.Distance(transform.position, points[1].position) < 0.02f)
         {
             StopMovement = true;
-
+            AudioManager.Instance.StopSound(6);
 
         }
     }

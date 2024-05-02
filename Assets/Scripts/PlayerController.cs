@@ -35,17 +35,18 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     // private GameManager gameManager;
     public bool isDead;
+    Vector3 LastCheckPointPo;
     private void Awake()
     {
         if (Instance != null)
         {
-            Destroy(gameObject);
+          //  Destroy(gameObject);
         }
         else
         {
             Instance = this;
 
-            DontDestroyOnLoad(gameObject);
+           // DontDestroyOnLoad(gameObject);
 
         }
     }
@@ -54,7 +55,19 @@ public class PlayerController : MonoBehaviour
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        //  transform.position = new Vector2(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"));
         // gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        if (AudioManager.Instance.ShouldRespawn)
+        {
+            Respawn();
+        }
+       // AudioManager.Instance.ShouldRespawn = true;
+    }
+
+    void Respawn()
+    {
+        transform.position = new Vector2(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY")) + new Vector2(0.5f,0);
     }
 
     private void FixedUpdate()
@@ -115,6 +128,8 @@ public class PlayerController : MonoBehaviour
 
                             canDoubleJump = !canDoubleJump;
 
+                            AudioManager.Instance.PlaySfx(1);
+
                         }
 
                     }
@@ -163,7 +178,7 @@ public class PlayerController : MonoBehaviour
                             rigidbody2d.velocity = new Vector2(-jumpForce, rigidbody2d.velocity.y);
 
                             canDoubleJump = !canDoubleJump;
-
+                            AudioManager.Instance.PlaySfx(1);
                         }
 
                     }
@@ -215,6 +230,7 @@ public class PlayerController : MonoBehaviour
 
                             canDoubleJump = !canDoubleJump;
 
+                            AudioManager.Instance.PlaySfx(1);
                         }
 
                     }
@@ -264,6 +280,8 @@ public class PlayerController : MonoBehaviour
                             rigidbody2d.velocity = new Vector2(jumpForce, rigidbody2d.velocity.y);
 
                             canDoubleJump = !canDoubleJump;
+
+                            AudioManager.Instance.PlaySfx(1);
 
                         }
 
@@ -342,6 +360,8 @@ public class PlayerController : MonoBehaviour
     public void ResetPlayer()
     {
         DownWalking();
+        gameObject.SetActive(true);
+        
     }
     public void stopMoving()
     {
@@ -423,6 +443,8 @@ public class PlayerController : MonoBehaviour
             {
                 DownWalking();
             }
+
+            AudioManager.Instance.PlaySfx(2);
         }
 
         if (other.gameObject.CompareTag("RightUp"))
@@ -441,6 +463,8 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
+
+            AudioManager.Instance.PlaySfx(2);
         }
 
         if (other.gameObject.CompareTag("UpLeft"))
@@ -459,6 +483,8 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
+
+            AudioManager.Instance.PlaySfx(2);
         }
 
         if (other.gameObject.CompareTag("LeftDown"))
@@ -477,6 +503,8 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
+
+            AudioManager.Instance.PlaySfx(2);
         }
 
         if (other.gameObject.CompareTag("RightDown"))
@@ -505,6 +533,8 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
+
+            AudioManager.Instance.PlaySfx(2);
         }
         if (other.gameObject.CompareTag("DownLeft"))
         {
@@ -531,6 +561,7 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
+            AudioManager.Instance.PlaySfx(2);
         }
 
         if (other.gameObject.CompareTag("LeftUp"))
@@ -558,6 +589,8 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
+
+            AudioManager.Instance.PlaySfx(2);
         }
 
         if (other.gameObject.CompareTag("UpRight"))
@@ -585,6 +618,8 @@ public class PlayerController : MonoBehaviour
                 }
 
             }
+
+            AudioManager.Instance.PlaySfx(2);
         }
 
         if (other.gameObject.CompareTag("AntiGravity"))

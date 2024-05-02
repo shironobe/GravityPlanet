@@ -22,10 +22,10 @@ public class Obstacle : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
 
-
-
+            AudioManager.Instance.PlaySfx(5);
+           
             GameManager.Instance.Activate_Restart_Panel();
-        }  
+        }   
         
 
         
@@ -36,9 +36,9 @@ public class Obstacle : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
 
-
-
-            GameManager.Instance.Activate_Restart_Panel();
+            //AudioManager.Instance.PlaySfx(5);
+           // other.gameObject.SetActive(false);
+           // GameManager.Instance.Activate_Restart_Panel();
         }
     }
 }

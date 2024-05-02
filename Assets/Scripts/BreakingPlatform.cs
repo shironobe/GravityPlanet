@@ -9,7 +9,7 @@ public class BreakingPlatform : MonoBehaviour
 
     [SerializeField] Sprite HalfBroken;
 
-    bool ishalfBroken;
+   public bool ishalfBroken;
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -28,11 +28,13 @@ public class BreakingPlatform : MonoBehaviour
 
             if (ishalfBroken)
             {
+                AudioManager.Instance.PlaySfx(3);
                 Destroy(gameObject);
 
             }
             if (!ishalfBroken)
             {
+                AudioManager.Instance.PlaySfx(4);
                 ishalfBroken = true;
                 sr.sprite = HalfBroken;
             }

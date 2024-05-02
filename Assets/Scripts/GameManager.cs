@@ -14,19 +14,23 @@ public class GameManager : MonoBehaviour
 
     public GameObject RestartPanel;
 
-  [SerializeField]  CinemachineVirtualCamera vcam;
-    CinemachineBasicMultiChannelPerlin noise;
+   [SerializeField]  CinemachineVirtualCamera vcam;
+   [SerializeField]  CinemachineBasicMultiChannelPerlin noise;
+
+   [SerializeField] GameObject Levels;
+
+    [SerializeField] Animator fadeAnim;
     private void Awake()
     {
         if (Instance != null)
         {
-            Destroy(gameObject);
+           // Destroy(gameObject);
         }
         else
         {
             Instance = this;
 
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
 
         }
     }
@@ -34,13 +38,25 @@ public class GameManager : MonoBehaviour
     {
          // vcam = GameObject.Find("CM vcam1").GetComponent<CinemachineVirtualCamera> ();
         noise = vcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin> ();
-      
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
-        LastCheckPointPos = Player.position;
-        PlayerPrefs.SetFloat("PosX", LastCheckPointPos.x);
+        //  RestartPanel = GameObject.FindGameObjectWithTag("RestartPanel").gameObject;
 
-        PlayerPrefs.SetFloat("PosY", LastCheckPointPos.y);
+      //  Player = GameObject.FindGameObjectWithTag("Player").transform;
+
+
+      // LastCheckPointPos = Player.position;
+
+        if (AudioManager.Instance.ShouldRespawn)
+        {
+           // PlayerPrefs.SetFloat("PosX", LastCheckPointPos.x);
+
+           // PlayerPrefs.SetFloat("PosY", LastCheckPointPos.y);
+        }
+        AudioManager.Instance.ShouldRespawn = true;
+
+
     }
+
+  
 
     // Update is called once per frame
     void Update()
@@ -54,38 +70,52 @@ public class GameManager : MonoBehaviour
         {
 
 
-            ReStartPlayer();
+            RestartScene();
 
 
         }
 
     
     }
-    public void ReStartPlayer()
+
+    void Respawn()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         LastCheckPointPos = new Vector2(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"));
 
-
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
-        Player.position = LastCheckPointPos;
         Physics2D.gravity = new Vector2(0, -9.81f);
-
+        PlayerController.Instance.transform.position = LastCheckPointPos;
         PlayerController.Instance.ResetPlayer();
+    }
 
-        PlayerController.Instance.isDead = false;
 
-        RestartPanel.SetActive(false);
+
+    IEnumerator RestartLevelCo()
+    {
+        fadeAnim.SetTrigger("end");
+        yield return new WaitForSeconds(1f);
+
+        AudioManager.Instance.ShouldRespawn = true;
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+    }
+    public void RestartScene()
+    {
+
+
+        StartCoroutine(RestartLevelCo());
     }
 
     public void RespawnPlayer()
     {
-       // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         // LastCheckPointPos = new Vector2(PlayerPrefs.GetFloat("PosX"), PlayerPrefs.GetFloat("PosY"));
 
 
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
-        Player.position = LastCheckPointPos;
+        // Player = GameObject.FindGameObjectWithTag("Player").transform;
+       // Player.position = LastCheckPointPos;
+        PlayerController.Instance.transform.position = LastCheckPointPos;
+       
         Physics2D.gravity = new Vector2(0, -9.81f);
        
         PlayerController.Instance.ResetPlayer();
@@ -99,6 +129,7 @@ public class GameManager : MonoBehaviour
     public void Activate_Restart_Panel()
     {
         PlayerController.Instance.isDead = true;
+        PlayerController.Instance.gameObject.SetActive(false);
         RestartPanel.SetActive(true);
     }
     public void setCheckPoint(Vector2 pos)
