@@ -181,6 +181,9 @@ public class GameManager : MonoBehaviour
 
         AudioManager.Instance.PlaySfx(9);
         PlayerController.Instance.isDead = true;
+        PlayerController.Instance.stopMoving();
+      
+        PlayerController.Instance.FreezeRb();
     }
 
     public void LodMainMenu()

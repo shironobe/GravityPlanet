@@ -86,6 +86,7 @@ public class MainMenu : MonoBehaviour
         {
             CreditsPanel.SetActive(false);
         }
+        AudioManager.Instance.PlaySfx(8);
     }
 
 
@@ -99,6 +100,7 @@ public class MainMenu : MonoBehaviour
 
     IEnumerator LoadScene(int SceneNo)
     {
+      
         AudioManager.Instance.PlaySfx(8);
         SceneTransition.SetTrigger("end");
       //  AudioManager.instance.PlaySfx(5);

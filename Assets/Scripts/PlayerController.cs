@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     // private GameManager gameManager;
     public bool isDead;
     Vector3 LastCheckPointPo;
+
+    [SerializeField] GameObject playerDeathEffect;
     private void Awake()
     {
         if (Instance != null)
@@ -367,6 +369,12 @@ public class PlayerController : MonoBehaviour
     {
         rigidbody2d.velocity = new Vector2(0, rigidbody2d.velocity.y);
     }
+
+    public void FreezeRb()
+    {
+        rigidbody2d.constraints = RigidbodyConstraints2D.FreezeAll;
+        animator.SetBool("isMoving", false);
+    }
     private void Flip()
     {
         facingRight = !facingRight;
@@ -424,6 +432,12 @@ public class PlayerController : MonoBehaviour
             deathState = false;
         }
     }
+
+    public void SpawnPlayerDeathEffect()
+    {
+        Instantiate(playerDeathEffect, transform.position, Quaternion.identity);
+    }
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
