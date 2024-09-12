@@ -38,6 +38,12 @@ public class PlayerController : MonoBehaviour
     Vector3 LastCheckPointPo;
 
     [SerializeField] GameObject playerDeathEffect;
+
+    public bool isRightpressed, isLeftPressed;
+
+    bool isJumpeBtn;
+
+    int JumpCount;
     private void Awake()
     {
         if (Instance != null)
@@ -86,7 +92,7 @@ public class PlayerController : MonoBehaviour
             {
                 case playerStates.Down_Walking:
                     Physics2D.gravity = new Vector2(0, -9.81f);
-                    if (Input.GetKey(KeyCode.D))                         //Movement code
+                    if (Input.GetKey(KeyCode.D) || isRightpressed || Input.GetKey(KeyCode.RightArrow))                         //Movement code
                     {
                         // theRb.AddForce(Vector2.right);
                         Move = 1;
@@ -96,7 +102,7 @@ public class PlayerController : MonoBehaviour
 
 
                     }
-                    else if (Input.GetKey(KeyCode.A))
+                    else if (Input.GetKey(KeyCode.A) || isLeftPressed || Input.GetKey(KeyCode.LeftArrow))
                     {
                         // theRb.AddForce(Vector2.left);
                         Move = -1;
@@ -116,23 +122,16 @@ public class PlayerController : MonoBehaviour
 
 
 
-                    if (isGrounded && !Input.GetButton("Jump"))
+                    if (isGrounded)
                     {
-                        canDoubleJump = false;
-
+                        canDoubleJump = true;
+                        isJumped = false;
 
                     }
-                    if (Input.GetButtonDown("Jump"))
+
+                    if (Input.GetButtonDown("Jump") )
                     {
-                        if (isGrounded || canDoubleJump)
-                        {
-                            rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, jumpForce);
-
-                            canDoubleJump = !canDoubleJump;
-
-                            AudioManager.Instance.PlaySfx(1);
-
-                        }
+                        Jumped();
 
                     }
 
@@ -140,13 +139,13 @@ public class PlayerController : MonoBehaviour
 
                 case playerStates.Right_Walking:
                     Physics2D.gravity = new Vector2(9.81f, 0);
-                    if (Input.GetKey(KeyCode.D))                         //Movement code
+                    if (Input.GetKey(KeyCode.D) || isRightpressed || Input.GetKey(KeyCode.RightArrow))                         //Movement code
                     {
                         // theRb.AddForce(Vector2.right);
                         Move = 1;
                         transform.localScale = new Vector2(1, 1);
                     }
-                    else if (Input.GetKey(KeyCode.A))
+                    else if (Input.GetKey(KeyCode.A) || isLeftPressed || Input.GetKey(KeyCode.LeftArrow))
                     {
                         // theRb.AddForce(Vector2.left);
                         Move = -1;
@@ -166,22 +165,15 @@ public class PlayerController : MonoBehaviour
                     rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, movingSpeed * Move * Time.fixedDeltaTime);
 
 
-
-                    if (isGrounded && !Input.GetButton("Jump"))
+                    if (isGrounded)
                     {
-                        canDoubleJump = false;
-
+                        canDoubleJump = true;
+                        isJumped = false;
 
                     }
-                    if (Input.GetButtonDown("Jump"))
+                    if (Input.GetButtonDown("Jump") )
                     {
-                        if (isGrounded || canDoubleJump)
-                        {
-                            rigidbody2d.velocity = new Vector2(-jumpForce, rigidbody2d.velocity.y);
-
-                            canDoubleJump = !canDoubleJump;
-                            AudioManager.Instance.PlaySfx(1);
-                        }
+                        Jumped();
 
                     }
 
@@ -191,13 +183,13 @@ public class PlayerController : MonoBehaviour
 
                     Physics2D.gravity = new Vector2(0, 9.81f);
 
-                    if (Input.GetKey(KeyCode.D))                         //Movement code
+                    if (Input.GetKey(KeyCode.D) || isRightpressed || Input.GetKey(KeyCode.RightArrow))                         //Movement code
                     {
                         // theRb.AddForce(Vector2.right);
                         Move = -1;
                         transform.localScale = new Vector2(1, 1);
                     }
-                    else if (Input.GetKey(KeyCode.A))
+                    else if (Input.GetKey(KeyCode.A) || isLeftPressed || Input.GetKey(KeyCode.LeftArrow))
                     {
                         // theRb.AddForce(Vector2.left);
                         Move = 1;
@@ -218,21 +210,18 @@ public class PlayerController : MonoBehaviour
 
 
 
-                    if (isGrounded && !Input.GetButton("Jump"))
+                    if (isGrounded)
                     {
-                        canDoubleJump = false;
-
+                        canDoubleJump = true;
+                        isJumped = false;
 
                     }
-                    if (Input.GetButtonDown("Jump"))
+
+                    if (Input.GetButtonDown("Jump") )
                     {
                         if (isGrounded || canDoubleJump)
                         {
-                            rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, -jumpForce);
-
-                            canDoubleJump = !canDoubleJump;
-
-                            AudioManager.Instance.PlaySfx(1);
+                            Jumped();
                         }
 
                     }
@@ -242,13 +231,13 @@ public class PlayerController : MonoBehaviour
                 case playerStates.Left_Walking:
 
                     Physics2D.gravity = new Vector2(-9.81f, 0);
-                    if (Input.GetKey(KeyCode.D))                         //Movement code
+                    if (Input.GetKey(KeyCode.D) || isRightpressed || Input.GetKey(KeyCode.RightArrow))                         //Movement code
                     {
                         // theRb.AddForce(Vector2.right);
                         Move = -1;
                         transform.localScale = new Vector2(1, 1);
                     }
-                    else if (Input.GetKey(KeyCode.A))
+                    else if (Input.GetKey(KeyCode.A) || isLeftPressed || Input.GetKey(KeyCode.LeftArrow))
                     {
                         // theRb.AddForce(Vector2.left);
                         Move = 1;
@@ -269,23 +258,17 @@ public class PlayerController : MonoBehaviour
 
 
 
-                    if (isGrounded && !Input.GetButton("Jump"))
+                    if (isGrounded)
                     {
-                        canDoubleJump = false;
-
+                        canDoubleJump = true;
+                        isJumped = false;
 
                     }
-                    if (Input.GetButtonDown("Jump"))
+
+
+                    if (Input.GetButtonDown("Jump") )
                     {
-                        if (isGrounded || canDoubleJump)
-                        {
-                            rigidbody2d.velocity = new Vector2(jumpForce, rigidbody2d.velocity.y);
-
-                            canDoubleJump = !canDoubleJump;
-
-                            AudioManager.Instance.PlaySfx(1);
-
-                        }
+                        Jumped();
 
                     }
 
@@ -357,7 +340,135 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    public void RightButton()
+    {
+        isRightpressed = true;
+    }
+    public void RightButtonUp()
+    {
+        isRightpressed = false;
+    }
 
+    public void LeftButton()
+    {
+        isLeftPressed = true;
+    }
+    public void LeftButtonUp()
+    {
+        isLeftPressed = false;
+    }
+
+    public void Jumped()
+    {
+        switch (CurrentState)
+        {
+            case playerStates.Down_Walking:
+
+
+                if (isGrounded && !isJumped)
+                {
+
+                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, jumpForce);
+                    canDoubleJump = true;
+
+                    isJumped = true;
+                    AudioManager.Instance.PlaySfx(1);
+
+                }
+                else if (canDoubleJump)
+                {
+                    // CreateDust();
+                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, jumpForce);
+                    canDoubleJump = false;
+                    AudioManager.Instance.PlaySfx(1);
+
+                }
+                
+
+              
+
+                break;
+
+            case playerStates.Right_Walking:
+                if (isGrounded && !isJumped)
+                {
+
+                    rigidbody2d.velocity = new Vector2(-jumpForce, rigidbody2d.velocity.y);
+                    canDoubleJump = true;
+
+                    isJumped = true;
+                    AudioManager.Instance.PlaySfx(1);
+
+                }
+                else if (canDoubleJump)
+                {
+                    // CreateDust();
+                    rigidbody2d.velocity = new Vector2(-jumpForce, rigidbody2d.velocity.y);
+                    canDoubleJump = false;
+                    AudioManager.Instance.PlaySfx(1);
+
+                }
+
+              
+
+              
+
+                break;
+
+            case playerStates.up_Walking:
+                if (isGrounded && !isJumped)
+                {
+
+                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, -jumpForce);
+                    canDoubleJump = true;
+                    AudioManager.Instance.PlaySfx(1);
+                    isJumped = true;
+
+                }
+                else if (canDoubleJump)
+                {
+                    // CreateDust();
+                    rigidbody2d.velocity = new Vector2(rigidbody2d.velocity.x, -jumpForce);
+                    canDoubleJump = false;
+                    AudioManager.Instance.PlaySfx(1);
+                }
+
+              
+                
+
+
+                break;
+            case playerStates.Left_Walking:
+
+                if (isGrounded && !isJumped)
+                {
+
+                    rigidbody2d.velocity = new Vector2(jumpForce, rigidbody2d.velocity.y);
+                    canDoubleJump = true;
+                    AudioManager.Instance.PlaySfx(1);
+                    isJumped = true;
+
+                }
+                else if (canDoubleJump)
+                {
+                    // CreateDust();
+                    rigidbody2d.velocity = new Vector2(jumpForce, rigidbody2d.velocity.y);
+                    canDoubleJump = false;
+                    AudioManager.Instance.PlaySfx(1);
+
+                }
+
+                
+
+                
+
+                break;
+        }
+    }
+    public void JumpedUp()
+    {
+        isJumpeBtn = false;
+    }
 
     public void ResetPlayer()
     {
